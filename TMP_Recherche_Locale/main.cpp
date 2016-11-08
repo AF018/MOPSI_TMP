@@ -11,36 +11,15 @@ int main()
     Partition part3("D:/Github/MOPSI/TMP_Recherche_Locale/data3.txt");
     part3.show();
 
-    /*
-
     cout << "Recherche naive" << endl;
     cout << endl;
-    //recherche_naive(part1,2);
-    //recherche_naive(part2,10);
+    recherche_naive(part1,10,1);
+    recherche_naive(part1,10,2);
 
-    cout << "Recherche par methode tabou2" << endl;
+    cout << "Recherche par methode tabou" << endl;
     cout << endl;
-    //methode_tabou2(part1,10,10);
-    //methode_tabou(part1,10,10);
-    part1.swap(0,2).show();
-    part1.swap(0,2).fill(true);
-    part1.swap(0,1).show();
-    part1.swap(0,1).fill(true);
-    cout<<compare(part1.swap(0,1),part1.swap(0,2),2)<<endl;
-    //Partition part3=part1.swap(1,2);
-    //part3.show();
-    //part3.fill(true);
-    //part1.show();
-    //part1.fill(true);
-    //bool a=compare(part1,part3,2);
-    //cout<<a<<endl;
-
-    */
-
-    Partition P("D:/Ecole des Ponts/Cours 2A/Projet MOPSI/Recherche locale/data.txt");
-    methode_tabou(part2,1000,1000,1);
-    methode_tabou(part2,1000,1000,2);
-    //methode_tabou2(part2,100,100);
+    methode_tabou(part1,1000,10000,1);
+    methode_tabou(part1,1000,10000,2);
 
     // La recherche parmi les voisins dans la methode tabou
     // n'est pas uniforme car on parcourt toujours les voisins dans le
