@@ -1,0 +1,148 @@
+#include "partition.h"
+
+Partition::Partition()
+{
+}
+
+Partition::Partition(const vector<vector<int> >& init_vect)
+{
+    // Copie de vecteur : pas de problème de mémoire
+    vect = init_vect;
+    // Tri des elements dans chaque ensemble pour une manipulation plus aisee
+    // au moment du remplissage dans les rails (besoin d'uns structure de type pile
+    // Complexité totale en O(n*log(n))
+    vector< vector<int> >::iterator it = vect.begin();
+    for (; it != vect.end(); it++)
+    {
+        sort((*it).begin(),(*it).end());
+    }
+}
+
+Partition::~Partition()
+{
+}
+
+vector< vector<int> > Partition::get_vect() const
+{
+    return vect;
+}
+
+int Partition::size() const
+{
+    return vect.size();
+}
+
+bool Partition::operator==(const Partition& part) const
+{
+    return (vect==part.get_vect());
+}
+
+void Partition::show() const
+{
+    cout << "( ";
+    vector< vector<int> >::const_iterator it1 = vect.begin();
+    for (; it1 != vect.end(); it1++)
+    {
+        cout << "{";
+        for (vector<int>::const_iterator it2 = (*it1).begin(); it2 != (*it1).end(); it2++)
+        {
+            cout << " " << *it2 << " ";
+            if (it2+1 != (*it1).end())
+            {
+                cout << ",";
+            }
+        }
+        cout << "} ";
+        if (it1+1 != vect.end())
+        {
+            cout << ", ";
+        }
+    }
+    cout << ")" << endl;
+    cout << endl;
+}
+
+Partition Partition::swap(int i, int j) const
+{
+    vector< vector<int> > vect_swap = vect;
+    vect_swap[i] = vect[j];
+    vect_swap[j] = vect[i];
+    return Partition(vect_swap);
+}
+
+bool Partition::find_min_elem(int& next_elem, const int& k, const int& inf_bound) const
+{
+    // On cherche l'element minimum du k-ieme ensemble de la partition strictement supérieur à inf_bound
+    // Si il existe, la methode renvoie True et donne la valeur associee à element
+    // Sinon la methode renvoie False
+    // Les ensembles sont des vecteurs ordonnes : on peut s'arreter des qu'on trouve le bon element
+    int ind = 0;
+    while(vect[k][ind]<=inf_bound and ind<vect[k].size())
+    {
+        ind++;
+    }
+    // si ind est egal a la taille du vecteur, on n'a pas trouve d'element qui correspond
+    // sinon ind correspond a l'indice de l'element voulu
+    if (ind == vect[k].size())
+    {
+        return false;
+    }
+    else
+    {
+        next_elem = vect[k][ind];
+        return true;
+    }
+}
+
+int Partition::fill(const bool& show) const
+{
+    // On utilise à nouveau des vecteurs : la structure de pile suffit car il faut
+    // juste rentrer des éléments dans les conteneurs et regarder leurs tailles
+    vector< vector<int> > rails;
+    rails.push_back(vector<int>());
+    int rail_ind = 0;
+    int inf_bound = 0;
+    int next_elem;
+    int elements_filled;
+    // On remplit les rails avec les ensembles de la partition, dans l'ordre donne
+    for (int k=0; k<vect.size(); k++)
+    {
+        // Deux cas possibles : l'ensemble va se repartir sur un ou deux rails
+        // On ne peut pas replacer un element avant d'avoir place tous les autres
+        // elements de l'ensemble, il suffit donc dans tous les cas de compter le nombre
+        // d'elements rentres et de s'arreter lorsqu'on atteint la taille de l'ensemble
+        elements_filled = 0;
+        while(elements_filled <vect[k].size())
+        {
+            if (find_min_elem(next_elem,k,inf_bound))
+            {
+                rails[rail_ind].push_back(next_elem);
+                inf_bound = next_elem;
+                elements_filled++;
+            }
+            else
+            {
+                rails.push_back(vector<int>());
+                rail_ind++;
+                inf_bound = 0;
+            }
+        }
+    }
+    for (int i=0; i<rails.size();i++)
+    {
+        reverse(rails[i].begin(),rails[i].end());
+    }
+    if (show)
+    {
+        for (int i=0; i<rails.size();i++)
+        {
+            for (int j=0; j<rails[i].size(); j++)
+            {
+                cout << rails[i][j] << " ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+    return rails.size();
+}
