@@ -8,9 +8,47 @@ Partition::Partition(const vector<vector<int> >& init_vect)
 {
     // Copie de vecteur : pas de problème de mémoire
     vect = init_vect;
+    n = 0;
     // Tri des elements dans chaque ensemble pour une manipulation plus aisee
     // au moment du remplissage dans les rails (besoin d'uns structure de type pile
     // Complexité totale en O(n*log(n))
+    vector< vector<int> >::iterator it = vect.begin();
+    for (; it != vect.end(); it++)
+    {
+        sort((*it).begin(),(*it).end());
+        n+=((*it).size());
+    }
+}
+
+Partition::Partition(const char* filename)
+{
+    // Construit une partition à partir d'un fichier txt (utiliser un chemin absolu)
+    // les éléments sont tous immédiatement suivis d'une virgule,
+    // les ensembles sont séparés par des retours à la ligne
+    n = 0;
+    ifstream file(filename);
+    string line;
+    int ind=0;
+    int len;
+    int start_pos;
+    while (getline(file,line))
+    {
+        vect.push_back(vector<int>());
+        start_pos = 0;
+        len = line.find(',',0);
+        vect[ind].push_back(atoi(line.substr(start_pos,len).c_str()));
+        n++;
+        while(start_pos+len<(line.size()-2))
+        {
+            // Recherche de la position du prochain nombre
+            start_pos += len+1;
+            len = line.find(',',start_pos)-start_pos;
+            vect[ind].push_back(atoi(line.substr(start_pos,len).c_str()));
+            n++;
+        }
+        ind++;
+    }
+    file.close();
     vector< vector<int> >::iterator it = vect.begin();
     for (; it != vect.end(); it++)
     {
@@ -94,7 +132,7 @@ bool Partition::find_min_elem(int& next_elem, const int& k, const int& inf_bound
     }
 }
 
-int Partition::fill(const bool& show) const
+int Partition::fill(const int& comparison_type, const bool& show) const
 {
     // On utilise à nouveau des vecteurs : la structure de pile suffit car il faut
     // juste rentrer des éléments dans les conteneurs et regarder leurs tailles
@@ -144,5 +182,15 @@ int Partition::fill(const bool& show) const
         }
         cout << endl;
     }
-    return rails.size();
+    if (comparison_type == 1)
+    {
+        // On retourne comme valeur a comparer le nombre de rails
+        return rails.size();
+    }
+    else if (comparison_type == 2)
+    {
+        // On retourne comme valeur a comparer la "position absolue"
+        // du dernier wagon dans la representation de Knudth
+        return (rails.size()-1)*n+rails.back().front();
+    }
 }

@@ -1,5 +1,5 @@
 #include "recherche.h"
-#include "math.h"
+
 bool find(queue<Partition> part_queue, const Partition& part)
 {
     // Cherche un element dans une queue : renvoie true si l'element est trouve
@@ -18,14 +18,14 @@ bool find(queue<Partition> part_queue, const Partition& part)
     return false;
 }
 
-int recherche_naive(Partition part, const int& n)
+int recherche_naive(Partition part, const int& n, const int& comparison_type)
 {
     // On regarde si on trouve un meilleur candidat que la partition parmi ses voisins par swap
     // Si c'est le cas, le meilleur candidat devient la nouvelle partition, sinon on s'arrête (grace a min_local)
     // On itere ce procede n fois au plus
     int k=0;
     bool min_local = false;
-    int score = part.fill(false);
+    int score = part.fill(comparison_type,false);
     Partition best_part;
     while(k<n and not min_local)
     {
@@ -36,10 +36,10 @@ int recherche_naive(Partition part, const int& n)
         {
             for (int j=i+1; j<part.size(); j++)
             {
-                if (part.swap(i,j).fill(false) < score)
+                if (part.swap(i,j).fill(comparison_type,false) < score)
                 {
                     best_part = part.swap(i,j);
-                    score = best_part.fill(false);
+                    score = best_part.fill(comparison_type,false);
                     min_local = false;
                 }
             }
@@ -53,11 +53,11 @@ int recherche_naive(Partition part, const int& n)
     }
     cout << "La repartition finale trouvee par recherche locale naive est :" << endl;
     part.show();
-    part.fill(true);
+    part.fill(comparison_type,true);
     return score;
 }
 
-int methode_tabou(Partition part, const int& l, const int& n)
+int methode_tabou(Partition part, const int& l, const int& n, const int &comparison_type)
 {
     queue<Partition> part_queue;
     for (int i=0; i<l; i++)
@@ -67,15 +67,16 @@ int methode_tabou(Partition part, const int& l, const int& n)
     int k=0;
     // Partition et score associe au meilleur element trouve jusqu'ici
     Partition opt_part;
-    int opt_score = part.size();
+    int opt_score = std::numeric_limits<int>::max();
     // Partition et score associe au meilleur voisin de l'element considere
     Partition best_part;
     int best_score;
     while(k<n)
     {
-        // On rajoute 1 car sinon l'algorithme ne peut quitter les minima locaux entourés
+        // On pose best_score égal au départ à la valeur maximale d'un entier en C++
+        // car sinon l'algorithme peut ne pas quitter les minima locaux entourés
         // de scores égaux à part.size()
-        best_score = part.size()+1;
+        best_score = std::numeric_limits<int>::max();
         // Recherche parmi les voisins (par operation de swap)
         for (int i=0; i<part.size()-1; i++)
         {
@@ -83,11 +84,11 @@ int methode_tabou(Partition part, const int& l, const int& n)
             {
                 // Test sur le score de la partition "swappee" et sa non-appartenance
                 // a la liste tabou (la deuxieme condition est vraie dans ce cas)
-                if (part.swap(i,j).fill(false) < best_score and
+                if (part.swap(i,j).fill(comparison_type,false) < best_score and
                     not find(part_queue,part.swap(i,j)))
                 {
                     best_part = part.swap(i,j);
-                    best_score = best_part.fill(false);
+                    best_score = best_part.fill(comparison_type,false);
                 }
             }
         }
@@ -101,18 +102,16 @@ int methode_tabou(Partition part, const int& l, const int& n)
             opt_part = best_part;
             opt_score = best_score;
         }
-        // Partie a enlever : test pour voir si le programme marche bien
-        //part.show();
-        //cout << part.fill(false) << endl;
-        //
         k++;
     }
     cout << "La repartition optimale trouvee par methode tabou est :" << endl;
     cout << endl;
     opt_part.show();
-    opt_part.fill(true);
+    opt_part.fill(comparison_type,true);
     return opt_score;
 }
+
+/*
 
 int methode_tabou2(Partition part, const int& l, const int& n)
 {
@@ -160,16 +159,12 @@ int methode_tabou2(Partition part, const int& l, const int& n)
         {
             opt_part = best_part;
         }
-        // Partie a enlever : test pour voir si le programme marche bien
-        //part.show();
-        //cout << part.fill(false) << endl;
-        //
         k++;
     }
     cout << "La repartition optimale trouvee par methode tabou est :" << endl;
     cout << endl;
     opt_part.show();
-    opt_part.fill(true);
+    opt_part.fill(1,true);
     return 0;
 }
 //indicemax est l'indice du plus haut ensemble swappe
@@ -278,3 +273,5 @@ int methode_recuit(Partition part,float temp){
     cout<<"Le meilleur score par la méthode de recuit est "<<best_score<<endl;
     return best_score;
 }
+
+*/
