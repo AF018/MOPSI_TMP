@@ -239,39 +239,50 @@ bool compare(Partition bestpart, Partition part1,int indicemax){
     }
 
 }
+*/
 
-int methode_recuit(Partition part,float temp){
+int methode_recuit(Partition part, float alpha, const int &comparison_type){
     int n=part.size(); //Taille
     Partition best_part;
-    float temperature=temp;
+    float temperature=10.0;
     float proba=0;
     float ener=0;
     float score=0;
+    int k=0;
     //on regarde les voisins
     int best_score = part.size()+1;
     while (temperature > 1){
+        cout<<"test1"<<endl;
         for (int i=0;i<n-1;i++){
             for (int j=i+1;j<n;j++){
-                score=part.swap(i,j).fill(false);
+                cout<<"test2"<<endl;
+                score=part.swap(i,j).fill(comparison_type,false);
+                //si on a trouvé un meilleur voisin
+                cout<<"test3"<<endl;
                 if (score< best_score){
+                    cout<<"test4"<<endl;
                     best_part = part.swap(i,j);
-                    best_score = best_part.fill(false);
+                    best_score = score;
                 }
                 else{
-                    ener=float(exp(-1*score/temperature));
+                    cout<<"test5"<<endl;
+                    //sinon, on laisse quand même la possibilité d'accepter (afin éviter les minia locaux)
+                    ener=float(exp(-1*(score-best_score)/temperature));
                     proba=rand()*1.0/RAND_MAX;
                     if(proba<ener){
                         best_part = part.swap(i,j);
                     }
                 }
-                temperature=temperature*0.99;
+                temperature=temperature*1.0/(1+alpha*k);
+                k=k+1;
             }
         }
     }
     best_part.show();
-    best_part.fill(true);
+    best_part.fill(comparison_type,true);
+    cout<<"Nombre d'itérations "<<k<<endl;
     cout<<"Le meilleur score par la méthode de recuit est "<<best_score<<endl;
     return best_score;
 }
 
-*/
+
