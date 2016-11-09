@@ -243,6 +243,7 @@ bool compare(Partition bestpart, Partition part1,int indicemax){
 
 int methode_recuit(Partition part, float alpha, const int &comparison_type){
     int n=part.size(); //Taille
+    Partition opt_part;
     Partition best_part;
     float temperature=10.0;
     float proba=0;
@@ -251,38 +252,38 @@ int methode_recuit(Partition part, float alpha, const int &comparison_type){
     int k=0;
     //on regarde les voisins
     int best_score = part.size()+1;
+    int opt_score=best_score;
     while (temperature > 1){
-        cout<<"test1"<<endl;
         for (int i=0;i<n-1;i++){
             for (int j=i+1;j<n;j++){
-                cout<<"test2"<<endl;
                 score=part.swap(i,j).fill(comparison_type,false);
                 //si on a trouvé un meilleur voisin
-                cout<<"test3"<<endl;
                 if (score< best_score){
-                    cout<<"test4"<<endl;
                     best_part = part.swap(i,j);
                     best_score = score;
                 }
-                else{
-                    cout<<"test5"<<endl;
-                    //sinon, on laisse quand même la possibilité d'accepter (afin éviter les minia locaux)
-                    ener=float(exp(-1*(score-best_score)/temperature));
-                    proba=rand()*1.0/RAND_MAX;
-                    if(proba<ener){
-                        best_part = part.swap(i,j);
-                    }
-                }
-                temperature=temperature*1.0/(1+alpha*k);
-                k=k+1;
+            }
+
+        }
+        if (best_score<opt_score){
+            opt_part=best_part;
+            opt_score=best_score;
+        }
+        else{
+            ener=float(exp(-1*(best_score-opt_score)/temperature));
+            proba=rand()*1.0/RAND_MAX;
+            if(proba<ener){
+                opt_part = best_part;
             }
         }
+        temperature=temperature*1.0/(1+alpha*k);
+        k=k+1;
     }
-    best_part.show();
-    best_part.fill(comparison_type,true);
+    opt_part.show();
+    opt_part.fill(comparison_type,true);
     cout<<"Nombre d'itérations "<<k<<endl;
-    cout<<"Le meilleur score par la méthode de recuit est "<<best_score<<endl;
-    return best_score;
+    cout<<"Le meilleur score par la méthode de recuit est "<<opt_score<<endl;
+    return opt_score;
 }
 
 
