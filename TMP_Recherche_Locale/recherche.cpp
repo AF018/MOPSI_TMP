@@ -104,7 +104,7 @@ int methode_tabou(Partition part, const int& l, const int& n, const int &compari
         }
         k++;
     }
-    cout << "La repartition optimale trouvee par methode tabou est :" << endl;
+    cout << "La repartition optimale trouvee par methode tabou " <<comparison_type<<" est :" << endl;
     cout << endl;
     opt_part.show();
     opt_part.fill(comparison_type,true);
@@ -243,38 +243,36 @@ bool compare(Partition bestpart, Partition part1,int indicemax){
 
 int methode_recuit(Partition part, float alpha, const int &comparison_type){
     int n=part.size(); //Taille
-    Partition opt_part;
-    Partition best_part;
+    Partition best_part=part;
+    Partition opt_part=part;
     float temperature=10.0;
     float proba=0;
     float ener=0;
     float score=0;
     int k=0;
     //on regarde les voisins
-    int best_score = part.size()+1;
-    int opt_score=best_score;
+    int best_score = std::numeric_limits<int>::max();
     while (temperature > 1){
         for (int i=0;i<n-1;i++){
             for (int j=i+1;j<n;j++){
-                score=part.swap(i,j).fill(comparison_type,false);
+                score=best_part.swap(i,j).fill(comparison_type,false);
+                part=part.swap(i,j);
                 //si on a trouvé un meilleur voisin
-                if (score< best_score){
-                    best_part = part.swap(i,j);
+                if (score<best_score){
+                    best_part = best_part.swap(i,j);
                     best_score = score;
+                    opt_part=best_part;
                 }
+                else{
+                    ener=float(exp(-1*(score-best_score)/temperature));
+                    proba=rand()*1.0/RAND_MAX;
+                    if(proba<ener){
+                        best_part = best_part.swap(i,j);
+                    }
+                }
+
             }
 
-        }
-        if (best_score<opt_score){
-            opt_part=best_part;
-            opt_score=best_score;
-        }
-        else{
-            ener=float(exp(-1*(best_score-opt_score)/temperature));
-            proba=rand()*1.0/RAND_MAX;
-            if(proba<ener){
-                opt_part = best_part;
-            }
         }
         temperature=temperature*1.0/(1+alpha*k);
         k=k+1;
@@ -282,8 +280,8 @@ int methode_recuit(Partition part, float alpha, const int &comparison_type){
     opt_part.show();
     opt_part.fill(comparison_type,true);
     cout<<"Nombre d'itérations "<<k<<endl;
-    cout<<"Le meilleur score par la méthode de recuit est "<<opt_score<<endl;
-    return opt_score;
+    cout<<"Le meilleur score par la méthode de recuit "<<comparison_type<<" est "<<best_score<<endl;
+    return best_score;
 }
 
 

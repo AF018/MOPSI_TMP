@@ -22,7 +22,7 @@ int main()
     methode_tabou(part2,10,10,2);
 
     cout<< "Recherche par méthode de recuit"<<endl;
-    methode_recuit(part1,0.00001,1);
+    methode_recuit(part2,0.01,1);
 
     // La recherche parmi les voisins dans la methode tabou
     // n'est pas uniforme car on parcourt toujours les voisins dans le
