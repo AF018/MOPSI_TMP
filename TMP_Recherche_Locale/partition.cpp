@@ -100,12 +100,28 @@ void Partition::show() const
     cout << endl;
 }
 
-Partition Partition::swap(int i, int j) const
+Partition Partition::swap(const int &i, const int &j) const
 {
     vector< vector<int> > vect_swap = vect;
     vect_swap[i] = vect[j];
     vect_swap[j] = vect[i];
     return Partition(vect_swap);
+}
+
+vector<Partition> Partition::neighbors() const
+{
+    vector<Partition> swap_neighbors;
+    // On range les voisins de l'element dans le vecteur swap_neighbors
+    for (int i=0; i<vect.size()-1; i++)
+    {
+        for (int j=i+1; j<vect.size(); j++)
+        {
+            swap_neighbors.push_back(swap(i,j));
+        }
+    }
+    // On mélange l'ordre des éléments avec random_shuffle
+    random_shuffle(swap_neighbors.begin(),swap_neighbors.end());
+    return swap_neighbors;
 }
 
 bool Partition::find_min_elem(int& next_elem, const int& k, const int& inf_bound) const
