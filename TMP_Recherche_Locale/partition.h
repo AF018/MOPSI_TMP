@@ -25,6 +25,7 @@ public:
     bool operator==(const Partition& part) const;
     void show() const;
     Partition swap(const int& i,const int& j) const;
+    Partition block_swap(const int& i,const int& j,const int& k) const;
     vector<Partition> neighbors() const;
     bool find_min_elem(int& next_elem, const int& k, const int& inf_bound) const;
     int fill(const int &comparison_type, const bool& show) const;

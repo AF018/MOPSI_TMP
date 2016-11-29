@@ -102,21 +102,39 @@ void Partition::show() const
 
 Partition Partition::swap(const int &i, const int &j) const
 {
+    // Echange les ensembles de la partition de coordonnées i et j
     vector< vector<int> > vect_swap = vect;
     vect_swap[i] = vect[j];
     vect_swap[j] = vect[i];
     return Partition(vect_swap);
 }
 
+Partition Partition::block_swap(const int &i, const int &j, const int &k) const
+{
+    // Echange les blocs d'ensembles de la partition de coordonnées i à i+k-1
+    // et j à j+k-1 (donc de même taille)
+    vector< vector<int> > vect_swap = vect;
+    for (int l=0; l<k; l++)
+    {
+        vect_swap[i+l]=vect[j+l];
+        vect_swap[j+l]=vect[i+l];
+    }
+    return vect_swap;
+}
+
 vector<Partition> Partition::neighbors() const
 {
+    // Complexité en O(vect.size()^4) a cause de l'echange de blocs
     vector<Partition> swap_neighbors;
-    // On range les voisins de l'element dans le vecteur swap_neighbors
-    for (int i=0; i<vect.size()-1; i++)
+    // On range les voisins de l'element par swap de blocs dans le vecteur
+    for (int k=1; k<1+vect.size()/2; k++)
     {
-        for (int j=i+1; j<vect.size(); j++)
+        for (int i=0; i<vect.size()-2*k+1; i++)
         {
-            swap_neighbors.push_back(swap(i,j));
+            for (int j=i+k; j<vect.size()-k+1; j++)
+            {
+                swap_neighbors.push_back(block_swap(i,j,k));
+            }
         }
     }
     // On mélange l'ordre des éléments avec random_shuffle
@@ -200,7 +218,7 @@ int Partition::fill(const int& comparison_type, const bool& show) const
     }
     if (comparison_type == 1)
     {
-        // On retourne comme valeur a comparer le nombre de rails
+        // On retourne comme valeur a comparer le nombre de rails utilises
         return rails.size();
     }
     else if (comparison_type == 2)

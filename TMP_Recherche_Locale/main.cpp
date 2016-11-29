@@ -18,16 +18,19 @@ int main()
 
     cout << "Recherche par methode tabou" << endl;
     cout << endl;
-    methode_tabou(part1,10,10,1);
-    methode_tabou(part1,10,10,2);
+    methode_tabou(part1,100,100,1);
+    methode_tabou(part1,100,100,2);
 
     // J'ai crée une methode neighbors qui renvoie dans un vecteur
     // les voisins dans un ordre aleatoire, comme on a dit avec le prof
     // Je te laisse l'utiliser pour la methode du recuit etant donne que
     // tu as code cette partie
+
     cout<< "Recherche par methode de recuit"<<endl;
     cout << "regarde le commentaire au dessus du recuit dans le main" << endl;
-    methode_recuit(part2,0.01,1);
+    methode_recuit(part1,0.01,1);
+
+    part1.neighbors();
 
     return 0;
 }

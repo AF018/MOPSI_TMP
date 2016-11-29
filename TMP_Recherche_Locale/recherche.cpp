@@ -5,6 +5,8 @@ bool find(queue<Partition> part_queue, const Partition& part)
     // Cherche un element dans une queue : renvoie true si l'element est trouve
     // et false dans le cas contraire
     Partition test;
+    // On utilise size car la longueur de la file est modifiee
+    // au fil des opérations
     int size = part_queue.size();
     for (int i=0; i<size; i++)
     {
@@ -57,8 +59,11 @@ int recherche_naive(Partition part, const int& n, const int& comparison_type)
     return score;
 }
 
-int methode_tabou(Partition part, const int& l, const int& n, const int &comparison_type)
+int methode_tabou(Partition part, const int& l, const int& iteration_nb, const int &comparison_type)
 {
+    // Algorithme de recherche locale utilisant la méthode tabou
+    // Complexité en O(iteration_nb*vect.size()^3*n²*(l+n))
+    // Rappel : n est le nombre de wagons
     queue<Partition> part_queue;
     for (int i=0; i<l; i++)
     {
@@ -73,7 +78,7 @@ int methode_tabou(Partition part, const int& l, const int& n, const int &compari
     int best_score;
     // Vecteur des voisins de la partition consideree
     vector<Partition> swap_neighbors;
-    while(k<n)
+    while(k<iteration_nb)
     {
         // On pose best_score égal au départ à la valeur maximale d'un entier en C++
         // car sinon l'algorithme peut ne pas quitter les minima locaux entourés
@@ -140,9 +145,7 @@ int methode_recuit(Partition part, float alpha, const int &comparison_type){
                         best_part = best_part.swap(i,j);
                     }
                 }
-
             }
-
         }
         temperature=temperature*1.0/(1+alpha*k);
         k=k+1;
