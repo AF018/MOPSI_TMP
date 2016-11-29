@@ -19,6 +19,7 @@ public:
     Partition();
     Partition(const vector<vector<int> >& init_vect);
     Partition(const char* filename);
+    Partition(const int& wagons_nb, const int& groups_nb);
     ~Partition();
     vector< vector<int> > get_vect() const;
     int size() const;

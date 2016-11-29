@@ -10,6 +10,8 @@ int main()
     part2.show();
     Partition part3("D:/Github/MOPSI/TMP_Recherche_Locale/data3.txt");
     part3.show();
+    Partition random_part(120,20);
+    random_part.show();
 
     cout << "Recherche naive" << endl;
     cout << endl;
@@ -30,7 +32,7 @@ int main()
     cout << "regarde le commentaire au dessus du recuit dans le main" << endl;
     methode_recuit(part1,0.01,1);
 
-    part1.neighbors();
+    methode_recuit(random_part,0.01,2);
 
     return 0;
 }

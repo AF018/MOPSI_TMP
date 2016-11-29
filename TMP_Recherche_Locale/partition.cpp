@@ -56,6 +56,35 @@ Partition::Partition(const char* filename)
     }
 }
 
+Partition::Partition(const int& wagons_nb, const int& groups_nb)
+{
+    n=wagons_nb;
+    vector<int> wagons;
+    for (int i=1; i<wagons_nb+1; i++)
+    {
+        wagons.push_back(i);
+    }
+    random_shuffle(wagons.begin(),wagons.end());
+    for (int i=0; i<groups_nb; i++)
+    {
+        vect.push_back(vector<int>());
+        vect[i].push_back(wagons.back());
+        wagons.pop_back();
+    }
+    int index;
+    while(wagons.size()>0)
+    {
+        index=(rand()%(groups_nb));
+        vect[index].push_back(wagons.back());
+        wagons.pop_back();
+    }
+    vector< vector<int> >::iterator it = vect.begin();
+    for (; it != vect.end(); it++)
+    {
+        sort((*it).begin(),(*it).end());
+    }
+}
+
 Partition::~Partition()
 {
 }
