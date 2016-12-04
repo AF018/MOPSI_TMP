@@ -1,0 +1,43 @@
+# glpsol --output resultats.txt
+#param n; #nombre de wagons
+
+#Définition des ensembles et des paramètres
+param n:=5; #nombre de wagons
+param t:=3; #nombres de destinations
+#Définition des destinations
+set A:={1,5};
+set B:={2,3};
+set C:={4};
+#Assemblage des destinations
+set S{i in 1..t}:=if i=1 then {A} 
+	else if i=2 then {B}
+	else if i=3 then {C}
+	else C;
+display S;
+
+#Déifinition des vatiables
+var x{i in 1..n,j in 1..n}binary; #le wagon i est il sur le rail j ?
+var y{a in 1..n,b in 1..n : a!=b}; #l'ensemble a sort-il avant b ?
+var z{l in 1..t}; #le rail j est il utilisé ?
+
+#Fonction objectif
+minimize obj : sum{l in 1..t} z[l];
+#contraintes
+subject to
+#le wagon n'appartient qu'à un rail
+unique_wagon {i in 1..n} : sum{l in 1..t} x[i,l]=1;
+sort_avant {a in 1..t,b in 1..t,i in S[a],j in S[b], r in 1..t : a!=b}: y[a,b]>=sum{l in 1..r} x[i,l] - sum{l in 1..r} x[j,l];
+sort_avant2 {a in 1..t,b in 1..t,i in S[a],j in S[b], r in 1..t,l in 1..t : a!=b and j>=i-1}: y[a,b]>= x[i,l] + x[j,l]-1;
+somme {a in 1..t,b in 1..t:a!=b}: y[a,b]+y[b,a]=1;
+compteur {l in 1..t, i in 1..n} : z[l]>=x[i,l];
+solve;
+
+#Affichage
+display y;
+display x;
+display z;
+printf "Il faut ";
+printf sum{l in 1..t}z[l];
+printf " rails.";
+printf "\n";
+end;
