@@ -1,7 +1,8 @@
 #pragma once
-
+#include <cmath>
 #include <ctime>
 #include <vector>
+#include <inttypes.h>
 #include <queue>
 #include <algorithm>
 #include <iostream>
@@ -19,10 +20,12 @@ public:
     Partition();
     Partition(const vector<vector<int> >& init_vect);
     Partition(const char* filename);
-    Partition(const int& wagons_nb, const int& groups_nb);
+    Partition(const int& wagons_nb, const int& groups_nb,bool choix);
     ~Partition();
     vector< vector<int> > get_vect() const;
     int size() const;
+    int nbelem() const;
+    int mincardi() const;
     bool operator==(const Partition& part) const;
     void show() const;
     Partition swap(const int& i,const int& j) const;
@@ -30,4 +33,5 @@ public:
     vector<Partition> neighbors() const;
     bool find_min_elem(int& next_elem, const int& k, const int& inf_bound) const;
     int fill(const int &comparison_type, const bool& show) const;
+    float moyenne()const;
 };

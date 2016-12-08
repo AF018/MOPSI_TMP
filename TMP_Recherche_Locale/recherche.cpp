@@ -153,8 +153,15 @@ int methode_recuit(Partition part, float alpha, const int &comparison_type){
     opt_part.show();
     opt_part.fill(comparison_type,true);
     cout<<"Nombre d'iterations "<<k<<endl;
-    cout<<"Le meilleur score par la methode de recuit "<<comparison_type<<" est "<<best_score<<endl;
-    return best_score;
+    if (comparison_type==1){
+        cout<<"Le meilleur score par la methode de recuit "<<comparison_type<<" est "<<best_score<<endl;
+        return best_score;
+    }
+    else{
+        int n2=part.nbelem();
+        cout<<"Le meilleur score par la methode de recuit "<<comparison_type<<" est "<<ceil(1.0*best_score/n2*1.0)<<endl;
+        return ceil(1.0*best_score/n2*1.0);
+    }
 }
 
 

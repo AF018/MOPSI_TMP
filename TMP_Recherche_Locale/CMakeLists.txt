@@ -12,3 +12,4 @@ add_executable(TMP_Rech_Locale
 	       recherche.cpp recherche.h
                partition.cpp partition.h)
 ImagineUseModules(TMP_Rech_Locale)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")

@@ -56,32 +56,74 @@ Partition::Partition(const char* filename)
     }
 }
 
-Partition::Partition(const int& wagons_nb, const int& groups_nb)
-{
-    n=wagons_nb;
-    vector<int> wagons;
-    for (int i=1; i<wagons_nb+1; i++)
-    {
-        wagons.push_back(i);
+Partition::Partition(const int& wagons_nb, const int& groups_nb, bool choix)
+{   if (choix)
+        {
+        n=wagons_nb;
+        vector<int> wagons;
+        for (int i=1; i<wagons_nb+1; i++)
+        {
+            wagons.push_back(i);
+        }
+        random_shuffle(wagons.begin(),wagons.end());
+        for (int i=0; i<groups_nb; i++)
+        {
+            vect.push_back(vector<int>());
+            vect[i].push_back(wagons.back());
+            wagons.pop_back();
+        }
+        int index;
+        while(wagons.size()>0)
+        {
+            index=(rand()%(groups_nb));
+            vect[index].push_back(wagons.back());
+            wagons.pop_back();
+        }
+        vector< vector<int> >::iterator it = vect.begin();
+        for (; it != vect.end(); it++)
+        {
+            sort((*it).begin(),(*it).end());
+        }
     }
-    random_shuffle(wagons.begin(),wagons.end());
-    for (int i=0; i<groups_nb; i++)
-    {
-        vect.push_back(vector<int>());
-        vect[i].push_back(wagons.back());
-        wagons.pop_back();
-    }
-    int index;
-    while(wagons.size()>0)
-    {
-        index=(rand()%(groups_nb));
-        vect[index].push_back(wagons.back());
-        wagons.pop_back();
-    }
-    vector< vector<int> >::iterator it = vect.begin();
-    for (; it != vect.end(); it++)
-    {
-        sort((*it).begin(),(*it).end());
+    else{
+        n=wagons_nb;
+        vector<int> wagons;
+        for (int i=1; i<wagons_nb+1; i++)
+        {
+            wagons.push_back(i);
+        }
+        random_shuffle(wagons.begin(),wagons.end());
+        //choix d'une taille entre 1 et groups_nb
+        int taille;
+        int reste=n;
+        int ind=0;
+        while (reste>0){
+            if (reste==(groups_nb-ind)){
+                taille=1;
+            }
+            else if (reste==1+(groups_nb-ind)){
+                taille=rand()%(2)+1;
+            }
+            else if(ind==groups_nb-1){
+                taille=reste;
+            }
+            else{
+                taille=(rand()%(reste-(groups_nb-ind)-1)+1);
+            }
+            vect.push_back(vector<int>());
+            for (int i=0;i<taille;i++){
+                vect[ind].push_back(wagons.back());
+                wagons.pop_back();
+            }
+            ind++;
+            reste=reste-taille;
+        }
+        vector< vector<int> >::iterator it = vect.begin();
+        for (; it != vect.end(); it++)
+        {
+            sort((*it).begin(),(*it).end());
+        }
+        random_shuffle(vect.begin(),vect.end());
     }
 }
 
@@ -93,6 +135,25 @@ vector< vector<int> > Partition::get_vect() const
 {
     return vect;
 }
+
+int Partition::mincardi() const
+{
+    int nb=this->nbelem();
+    int a=nb;
+    cout<<"a "<<a<<endl;
+    for (int i=0;i<this->size();i++){
+        a=vect[i].size();
+        if (a<nb){
+            nb=a;
+        }
+    }
+    return nb;
+}
+
+int Partition::nbelem() const
+{   return n;
+}
+
 
 int Partition::size() const
 {
@@ -256,4 +317,29 @@ int Partition::fill(const int& comparison_type, const bool& show) const
         // du dernier wagon dans la representation de Knudth
         return (rails.size()-1)*n+rails.back().front();
     }
+}
+
+float Partition::moyenne() const{
+    float moy[vect.size()];
+    int nb=0;
+    int k=0;
+    float moyenne=0;
+    float var=0;
+    for (auto& it : vect)
+    {
+        for (auto& l : it)
+        {
+            nb++;
+        }
+        moyenne+=nb;
+        moy[k]=nb;
+
+        k++;
+        nb=0;
+
+    }
+    for (int i=0;i<k;i++){
+        var+=(moy[i]-moyenne)*(moy[i]-moyenne);
+    }
+    return (var);
 }

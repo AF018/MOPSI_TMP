@@ -1,16 +1,48 @@
 #include "recherche.h"
+int constante(float n,float m)
+{   int d=floor(n/m);
+    int val= ceil((m-1)*d*d/n+1/m);
+    cout<<"La constante de la conjecture vaut "<<val<<endl;
+    return val;
+}
+
+int calcul(int n,int nbwag,int nbdirec, float alpha){
+    int nb=nbwag;
+    int a=nbwag;
+    int cons;
+    for (int i=0;i<n;i++){
+        Partition part(nbwag,nbdirec,false);
+        cons=constante(part.nbelem(),part.mincardi());
+
+        cout<<"Mini cardi "<<part.mincardi()<<endl;
+        a=methode_recuit(part,alpha,2);
+        cout<<"Methode recuit "<<a<<endl;
+        if (a<nb){
+            nb=a;
+        }
+        if(cons<a){
+            cout<<"XXXXXXXXXXXXXXXXXXXXXXXXXXXX"<<endl;
+            cout<<"La constante vaut "<<cons<<endl;
+            part.show();
+            return (1111111111);
+        }
+    }
+    cout<<"Le minimum est "<<nb<<endl;
+    return 0;
+}
 
 int main()
 {
     srand(time(0));
-
+/*
     Partition part1("D:/Github/MOPSI/TMP_Recherche_Locale/data1.txt");
     part1.show();
     Partition part2("D:/Github/MOPSI/TMP_Recherche_Locale/data2.txt");
     part2.show();
     Partition part3("D:/Github/MOPSI/TMP_Recherche_Locale/data3.txt");
     part3.show();
-    Partition random_part(120,20);
+    Partition random_part(120,20,false);
+    cout<<random_part.moyenne()<<endl;
     random_part.show();
 
     cout << "Recherche naive" << endl;
@@ -33,6 +65,7 @@ int main()
     methode_recuit(part1,0.01,1);
 
     methode_recuit(random_part,0.01,2);
-
+ */
+    cout<<calcul(50,120,2,0.01)<<endl;
     return 0;
 }
