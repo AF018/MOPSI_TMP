@@ -1,5 +1,37 @@
 #include "recherche.h"
 
+int constante(float n,float m)
+{   int d=floor(n/m);
+    int val= ceil((m-1)*d*d/n+1/m);
+    cout<<"La constante de la conjecture vaut "<<val<<endl;
+    return val;
+}
+
+int calcul(int n,int nbwag,int nbdirec, float alpha){
+    int nb=nbwag;
+    int a=nbwag;
+    int cons;
+    for (int i=0;i<n;i++){
+        Partition part(nbwag,nbdirec,false);
+        cons=constante(part.nbelem(),part.mincardi());
+
+        cout<<"Mini cardi "<<part.mincardi()<<endl;
+        a=methode_recuit(part,alpha,2);
+        cout<<"Methode recuit "<<a<<endl;
+        if (a<nb){
+            nb=a;
+        }
+        if(cons<a){
+            cout<<"XXXXXXXXXXXXXXXXXXXXXXXXXXXX"<<endl;
+            cout<<"La constante vaut "<<cons<<endl;
+            part.show();
+            return (1111111111);
+        }
+    }
+    cout<<"Le minimum est "<<nb<<endl;
+    return 0;
+}
+
 bool find(queue<Partition> part_queue, const Partition& part)
 {
     // Cherche un element dans une queue : renvoie true si l'element est trouve

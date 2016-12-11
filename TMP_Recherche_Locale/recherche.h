@@ -2,6 +2,9 @@
 
 #include "partition.h"
 
+int constante(float n,float m);
+int calcul(int n,int nbwag,int nbdirec, float alpha);
+
 bool find(queue<Partition> part_queue, const Partition& part);
 
 int recherche_naive(Partition part, const int &n, const int &comparison_type);
