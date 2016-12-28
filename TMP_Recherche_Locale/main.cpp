@@ -24,17 +24,16 @@ int main()
     methode_tabou(part1,100,100,1);
     methode_tabou(part1,100,100,2);
 
-    // J'ai crée une methode neighbors qui renvoie dans un vecteur
-    // les voisins dans un ordre aleatoire, comme on a dit avec le prof
-    // Je te laisse l'utiliser pour la methode du recuit etant donne que
-    // tu as code cette partie
-
     cout<< "Recherche par methode de recuit"<<endl;
-    cout << "regarde le commentaire au dessus du recuit dans le main" << endl;
     methode_recuit(part1,0.01,1);
 
     methode_recuit(random_part,0.01,2);
  */
-    cout<<calcul(50,120,2,0.01)<<endl;
+
+    //cout<<calcul(50,120,2,0.01)<<endl;
+
+    bound_test(150,20,0.01);
+
+    time_test();
     return 0;
 }

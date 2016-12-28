@@ -11,5 +11,5 @@ add_executable(TMP_Rech_Locale
                main.cpp
 	       recherche.cpp recherche.h
                partition.cpp partition.h)
-ImagineUseModules(TMP_Rech_Locale)
+ImagineUseModules(TMP_Rech_Locale Graphics)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
