@@ -24,6 +24,8 @@ int constante(float n,float m)
 }
 
 int calcul(int n,int nbwag,int nbdirec, float alpha){
+    //effectue n tests selon la méthode recuit (au paramètre alpha) pour des instances générées aléatoirement
+    //comportant nbwag wagons et nbdirec directions.
     int nb=nbwag;
     int a=nbwag;
     int cons;
@@ -52,14 +54,19 @@ void bound_test(const int& sim_nb,const int& nb_wag, const float& alpha)
 {
     // Effectue sim_nb simulations de répartitions de trains de nb_wag wagons générés aléatoirement
     // Affiche les résultats dans un graphique (points bleus) avec la borne supérieure de l'article
-    // représentée par une barre rouge
+    // représentée par une barre rouge et la conjecture par un point vert.
     // Les simulations sont effectuées par recuit simulé pour l'instant
     int bound = ceil(nb_wag/4+0.5);
     cout << bound << endl;
+
     vector<int> results;
+    vector<int> conje;
     for (int i=0;i<sim_nb;i++)
     {
-        results.push_back(methode_recuit(Partition(nb_wag,0,false),alpha,2,true));
+        Partition part(nb_wag,0,false);
+        int conj=constante(part.nbelem(),part.mincardi());
+        results.push_back(methode_recuit(part,alpha,2,true));
+        conje.push_back(conj);
     }
     Window window = openWindow(30+sim_nb*6,512);
     drawLine(0,502,30+sim_nb*6,502,BLACK);
@@ -69,6 +76,7 @@ void bound_test(const int& sim_nb,const int& nb_wag, const float& alpha)
     for (int i=0;i<sim_nb;i++)
     {
         fillCircle(12+i*6,512-(10+10*results[i]),2,BLUE);
+        fillCircle(12+i*6,512-(10+10*conje[i]),2,GREEN);
     }
     click();
     cout << bound << endl;
