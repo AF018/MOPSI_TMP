@@ -5,7 +5,8 @@ void time_test()
     // Teste le temps de résolution pour une même instance
 
     // Reste à insérer le nombre de wagons et à choisir comment évoluent les paramètres
-    Partition part_test(100,0,false);
+    Partition part_test(50,0,false);
+    part_test.show();
     double timer=(double)(clock());
     methode_tabou(part_test,100,50,2,true);
     timer = ((double)(clock())-timer)/CLOCKS_PER_SEC;
@@ -64,19 +65,36 @@ void bound_test(const int& sim_nb,const int& nb_wag, const float& alpha)
     for (int i=0;i<sim_nb;i++)
     {
         Partition part(nb_wag,0,false);
-        int conj=constante(part.nbelem(),part.mincardi());
+        //int conj=constante(part.nbelem(),part.mincardi());
         results.push_back(methode_recuit(part,alpha,2,true));
-        conje.push_back(conj);
+        //conje.push_back(conj);
     }
+    /*
+    vector<int> histo(nb_wag);
+    for (int i=0;i<results.size();i++)
+    {
+        histo[results[i]]++;
+    }
+    for (int i;i<nb_wag;i++)
+    {
+        cout <<
+        cout << histo[i] << endl;
+    }
+    */
     Window window = openWindow(30+sim_nb*6,512);
+
     drawLine(0,502,30+sim_nb*6,502,BLACK);
     drawLine(10,0,10,512,BLACK);
     drawLine(10,512-(10+10*bound),(30+sim_nb*6),512-(10+10*bound),RED);
+    for (int i=0;i<5;i++)
+    {
+        drawString(1,512-(10+100*i),to_string(10*i),BLACK,5);
+    }
     click();
     for (int i=0;i<sim_nb;i++)
     {
         fillCircle(12+i*6,512-(10+10*results[i]),2,BLUE);
-        fillCircle(12+i*6,512-(10+10*conje[i]),2,GREEN);
+        //fillCircle(12+i*6,512-(10+10*conje[i]),2,GREEN);
     }
     click();
     cout << bound << endl;

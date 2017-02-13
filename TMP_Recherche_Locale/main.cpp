@@ -32,7 +32,7 @@ int main()
 
     //cout<<calcul(50,120,2,0.01)<<endl;
 
-    bound_test(150,20,0.01);
+    //bound_test(80,100,0.01);
 
     time_test();
     return 0;
